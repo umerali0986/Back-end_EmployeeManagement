@@ -4,6 +4,8 @@ import com.umercode.EmployeeManagement.Entity.Employee;
 import com.umercode.EmployeeManagement.Service.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,39 +19,39 @@ public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
 
     @GetMapping(path = "/all")
-    public List<Employee> getAllEmployees(){
-        return employeeService.getAllEmployees();
+    public ResponseEntity<List<Employee>> getAllEmployees(){
+        return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}")
-    public Employee getEmployeeById(@PathVariable("id") Long id){
-        return employeeService.getEmployeeById(id);
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(employeeService.getEmployeeById(id),HttpStatus.OK);
     }
 
-    //TODO-It's not retrieving employee by name, fix it
+
     @GetMapping(path = "/name/{employeeName}")
-    public List<Employee> getEmployeeByName(@PathVariable("employeeName") String employeeName){
-        return employeeService.getEmployeeByName(employeeName);
+    public ResponseEntity<List<Employee>> getEmployeeByName(@PathVariable("employeeName") String employeeName){
+        return new ResponseEntity<>(employeeService.getEmployeeByName(employeeName),HttpStatus.OK);
     }
 
     @GetMapping(path = "/jobTitle/{jobtitle}")
-    public List<Employee> getEmployeeByJobTitle(@PathVariable("jobtitle") String jobTitle){
-        return employeeService.getEmployeeByJobTitle(jobTitle);
+    public ResponseEntity<List<Employee>> getEmployeeByJobTitle(@PathVariable("jobtitle") String jobTitle){
+        return new ResponseEntity<>(employeeService.getEmployeeByJobTitle(jobTitle),HttpStatus.OK);
     }
 
     @GetMapping(path = "/code/{employeeCode}")
-    public Employee getEmployeeByEmployeeCode(@PathVariable("employeeCode") String employeeCode){
-        return employeeService.getEmployeeByEmployeeCode(employeeCode);
+    public ResponseEntity<Employee> getEmployeeByEmployeeCode(@PathVariable("employeeCode") String employeeCode){
+        return new ResponseEntity<>(employeeService.getEmployeeByCode(employeeCode),HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public Employee createEmployee(@RequestBody Employee employee){
-        return employeeService.createEmployee(employee);
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee){
+        return new ResponseEntity<>(employeeService.createEmployee(employee),HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/update/{id}")
-    public Employee updateEmployeeById(@PathVariable("id") Long id, @RequestBody Employee employee){
-        return employeeService.updateEmployee(id,employee);
+    public ResponseEntity<Employee> updateEmployeeById(@PathVariable("id") Long id, @RequestBody Employee employee){
+        return new ResponseEntity<>(employeeService.updateEmployee(id,employee),HttpStatus.OK);
     }
 
     @DeleteMapping(path ="/{id}")

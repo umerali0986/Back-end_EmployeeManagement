@@ -1,6 +1,8 @@
 package com.umercode.EmployeeManagement.Service;
 
 import com.umercode.EmployeeManagement.Entity.Employee;
+import com.umercode.EmployeeManagement.Exceptions.UserAlreadyExistException;
+import com.umercode.EmployeeManagement.Exceptions.UserNotFoundException;
 import com.umercode.EmployeeManagement.Repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,47 +28,33 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public Employee getEmployeeById(Long id){
-        if(employeeRepository.findById(id).isEmpty()){
-            new Employee();
-        }
-        return employeeRepository.findById(id).get();
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.orElse(null);
     }
 
     @Override
     public List<Employee> getEmployeeByName(String name) {
-        if (employeeRepository.findByEmployeeCode(name).isEmpty()){
-            return new ArrayList<>();
-        }
-        return employeeRepository.findEmployeeByLastName(name).get();
+        return employeeRepository.findByFirstName(name).get();
     }
 
     @Override
     public List<Employee> getEmployeeByJobTitle(String jobTitle) {
-        if(employeeRepository.findByJobTitle(jobTitle).isEmpty()){
-            return new ArrayList<>();
-        }
         return employeeRepository.findByJobTitle(jobTitle).get();
     }
 
     @Override
-    public Employee getEmployeeByEmployeeCode(String employeeCode) {
-        if(employeeRepository.findByEmployeeCode(employeeCode).isEmpty()){
-            return new Employee();
-        }
-        return employeeRepository.findByEmployeeCode(employeeCode).get();
+    public Employee getEmployeeByCode(String employeeCode) {
+      Optional<Employee> employee = employeeRepository.findByEmployeeCode(employeeCode);
+        return employee.orElse(null);
     }
 
     @Override
     public Employee createEmployee(Employee employee) {
       try{
-          if(employeeRepository.findByEmployeeCode(employee.getEmployeeCode()).isPresent()){
-              throw new IllegalStateException("Employee already exist.");
-          }
-
           if(employeeRepository.findByEmail(employee.getEmail()).isPresent()){
-            throw new IllegalStateException("Email is taken.");
+            throw new UserAlreadyExistException("email");
           }
-      }catch (IllegalStateException e){
+      }catch (UserAlreadyExistException e){
           System.out.println(e.getMessage());
           return null;
       }
@@ -76,25 +65,35 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Transactional
     @Override
     public Employee updateEmployee(Long id, Employee employee) {
-       try {
-           if(employeeRepository.findById(id).isEmpty()){
-               throw new IllegalStateException("Employee doesn't exist");
+
+        Optional<Employee> employeeFromDB = employeeRepository.findById(id);
+
+        try {
+           if(employeeFromDB.isEmpty()){
+               throw new UserNotFoundException("Employee doesn't exist");
            }
-       }catch (IllegalStateException e){
+       }catch (UserNotFoundException e){
            System.out.println(e.getMessage());
            return null;
        }
-        Employee employeeFromDB = employeeRepository.findById(id).get();
 
-        employeeFromDB.setImageUrl(employee.getImageUrl());
-        employeeFromDB.setPhone(employee.getPhone());
-        employeeFromDB.setJobTitle(employee.getJobTitle());
-        employeeFromDB.setEmail(employee.getEmail());
-        return employeeFromDB;
+        employeeFromDB.get().setImageUrl(employee.getImageUrl());
+        employeeFromDB.get().setPhone(employee.getPhone());
+        employeeFromDB.get().setJobTitle(employee.getJobTitle());
+        employeeFromDB.get().setEmail(employee.getEmail());
+
+        return employeeFromDB.get();
     }
 
-    @Override
+    @Override //TODO- Archieved a data instead of deleting from a table
     public void deleteEmployeeById(Long id) {
+        try {
+            if(employeeRepository.findById(id).isEmpty()){
+                throw new UserNotFoundException("Employee doesn't exist");
+            }
+        }catch(UserNotFoundException e){
+            System.out.println(e.getMessage());
+        }
         employeeRepository.deleteById(id);
     }
 }

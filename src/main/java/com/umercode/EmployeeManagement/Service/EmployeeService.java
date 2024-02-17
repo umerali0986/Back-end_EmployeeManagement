@@ -9,7 +9,7 @@ public interface EmployeeService {
     Employee getEmployeeById(Long id);
     List<Employee> getEmployeeByName(String name);
     List<Employee> getEmployeeByJobTitle(String jobTitle);
-    Employee getEmployeeByEmployeeCode(String employeeCode);
+    Employee getEmployeeByCode(String employeeCode);
     Employee createEmployee(Employee employee);
     Employee updateEmployee(Long id, Employee employee);
     void deleteEmployeeById(Long id);
