@@ -14,13 +14,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest(properties = {
-        "spring.datasource.url = jdbc:h2://mem:db;DB_DELAY_CLOSE=-1",
+        "spring.datasource.url = jdbc:h2://mem:test;DB_DELAY_CLOSE=-1",
         "spring.datasource.username = sa",
         "spring.datasource.password = sa",
         "spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.H2Dialect",
 })
 @TestMethodOrder(MethodOrderer.MethodName.class)
-
 public class EmployeeRepositoryTest {
 
     @Autowired
@@ -34,6 +33,7 @@ public class EmployeeRepositoryTest {
     @BeforeEach//TODO- setup a data only once before test run.(i.e Use @BeforeAll)
     @DirtiesContext
     public void setUp(){
+
          john = new Employee(1l,"John","Smith","johnsmith@gmail.com","Back-end Developer","5439082312",
                 "https://bootdey.com/img,/content/avatar/avatar1.png", UUID.randomUUID().toString().substring(0,6));
 
