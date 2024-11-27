@@ -10,7 +10,8 @@
 	</parent>
 	<groupId>com.umercode</groupId>
 	<artifactId>Employee_Management</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1</version>
+	<packaging>war</packaging>
 	<name>EmployeeManagement</name>
 	<description>Employee Management Spring boot Application</description>
 	<properties>
