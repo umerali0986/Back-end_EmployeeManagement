@@ -3,6 +3,7 @@ services:
   db01:
     build: 
       context: ./Docker-files/db
+    image: employeeDB
     container_name: db01
     ports:
       - "3306:3306"
@@ -14,14 +15,16 @@ services:
   app01:
     build: 
       context: ./Docker-files/app
-  container_name: app01
-  ports:
-    - "8080:8080"
-  volumes:
-    - app01data:/usr/local/tomcat/webapps
+    image: employeeApp
+    container_name: app01
+    ports:
+      - "9000:9000"
+    restart: always
+    depends_on:
+      - db01
 
 volumes:
   db01data: {}
-  app01data: {}
+
   
   
