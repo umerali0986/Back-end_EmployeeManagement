@@ -18,7 +18,7 @@
 --
 -- Table structure for table `employee`
 --
-
+USE employee_management;
 DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
