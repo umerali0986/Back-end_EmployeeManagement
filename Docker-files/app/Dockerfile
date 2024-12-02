@@ -7,7 +7,7 @@ RUN cd Back_end_EmployeeManagement && mvn install -DskipTests
 FROM openjdk:11
 WORKDIR /usr/src/app/
 
-COPY --from=app_image /Back_end_EmployeeManagement/target/Employee_Management-0.0.1-SNAPSHOT.jar ./Employee_Management-0.0.1-SNAPSHOT.jar
+COPY --from=app_image /usr/src/app/Back_end_EmployeeManagement/target/Employee_Management-0.0.1-SNAPSHOT.jar ./Employee_Management-0.0.1.jar
 
-EXPOSE 9000
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","Employee_Management-0.0.1.jar"]
